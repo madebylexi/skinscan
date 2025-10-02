@@ -29,12 +29,28 @@ interface AnalysisResultsProps {
 
 export function AnalysisResults({ data, onNewAnalysis }: AnalysisResultsProps) {
   const beneficialCount = data.analyzedIngredients.filter((i) => i.rating === "beneficial").length;
+  const cautionCount = data.analyzedIngredients.filter((i) => i.rating === "caution").length;
   const concernCount = data.analyzedIngredients.filter((i) => i.rating === "concern").length;
   
+  const calculateScore = (): number => {
+    if (data.analyzedIngredients.length === 0) return 0;
+    
+    const beneficialPoints = beneficialCount * 10;
+    const cautionPoints = cautionCount * 5;
+    const concernPoints = concernCount * 0;
+    
+    const totalPoints = beneficialPoints + cautionPoints + concernPoints;
+    const maxPoints = data.analyzedIngredients.length * 10;
+    
+    return (totalPoints / maxPoints) * 10;
+  };
+  
+  const score = calculateScore();
+  
   const productRating = 
-    concernCount === 0 && beneficialCount >= data.analyzedIngredients.length * 0.7 ? "excellent" :
-    concernCount <= 1 && beneficialCount >= data.analyzedIngredients.length * 0.5 ? "good" :
-    concernCount <= 2 ? "fair" : "poor";
+    score >= 8.5 ? "excellent" :
+    score >= 7 ? "good" :
+    score >= 5 ? "fair" : "poor";
   
   const analyzedIngredientNames = data.analyzedIngredients.map((i) => i.name.toLowerCase());
 
@@ -57,6 +73,7 @@ export function AnalysisResults({ data, onNewAnalysis }: AnalysisResultsProps) {
           beneficialCount={beneficialCount}
           concernCount={concernCount}
           totalAnalyzed={data.analyzedIngredients.length}
+          score={score}
         />
 
         <div>
