@@ -1,50 +1,105 @@
 import { useState } from "react";
 import { Header } from "@/components/Header";
 import { Hero } from "@/components/Hero";
-import { ScanResults, type ScanResultData } from "@/components/ScanResults";
+import { AnalysisResults, type AnalysisResultData } from "@/components/AnalysisResults";
 
 export default function Home() {
-  const [isScanning, setIsScanning] = useState(false);
-  const [scanResult, setScanResult] = useState<ScanResultData | null>(null);
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [analysisResult, setAnalysisResult] = useState<AnalysisResultData | null>(null);
 
-  const handleScan = async (url: string) => {
-    setIsScanning(true);
-    console.log('Scanning URL:', url);
+  const handleAnalyze = async (url: string) => {
+    setIsAnalyzing(true);
+    console.log('Analyzing URL:', url);
 
     // TODO: remove mock functionality - Replace with actual API call
     setTimeout(() => {
-      const mockResult: ScanResultData = {
+      const mockResult: AnalysisResultData = {
         url,
-        ingredients: 'Enriched flour (wheat flour, niacin, reduced iron, vitamin B1), sugar, peanut butter (peanuts, salt), vegetable oil, high fructose corn syrup, salt, soy lecithin, artificial flavor',
-        allergens: [
-          { name: 'Peanuts', icon: '🥜', status: 'detected', details: 'Found in ingredient list' },
-          { name: 'Tree Nuts', icon: '🌰', status: 'not_found' },
-          { name: 'Milk', icon: '🥛', status: 'not_found' },
-          { name: 'Eggs', icon: '🥚', status: 'not_found' },
-          { name: 'Fish', icon: '🐟', status: 'not_found' },
-          { name: 'Shellfish', icon: '🦐', status: 'not_found' },
-          { name: 'Soy', icon: '🫘', status: 'detected', details: 'Contains soy lecithin' },
-          { name: 'Wheat', icon: '🌾', status: 'detected', details: 'Contains wheat flour' },
+        ingredients: 'Water, Glycerin, Hyaluronic Acid (Sodium Hyaluronate), Niacinamide (Vitamin B3), Ascorbic Acid (Vitamin C), Retinol, Peptides, Ceramides, Fragrance, Preservatives',
+        analyzedIngredients: [
+          {
+            name: 'Hyaluronic Acid',
+            commonName: 'Sodium Hyaluronate',
+            rating: 'beneficial',
+            pros: [
+              'Excellent hydration and moisture retention',
+              'Plumps skin and reduces fine lines',
+              'Suitable for all skin types including sensitive'
+            ],
+            cons: [],
+          },
+          {
+            name: 'Niacinamide',
+            commonName: 'Vitamin B3',
+            rating: 'beneficial',
+            pros: [
+              'Reduces hyperpigmentation and dark spots',
+              'Minimizes pore appearance',
+              'Strengthens skin barrier function'
+            ],
+            cons: [],
+          },
+          {
+            name: 'Vitamin C',
+            commonName: 'Ascorbic Acid',
+            rating: 'beneficial',
+            pros: [
+              'Powerful antioxidant protection',
+              'Brightens skin tone',
+              'Boosts collagen production'
+            ],
+            cons: [
+              'Can oxidize quickly',
+              'May cause sensitivity in high concentrations'
+            ],
+          },
+          {
+            name: 'Retinol',
+            rating: 'caution',
+            pros: [
+              'Reduces wrinkles and fine lines',
+              'Improves skin texture and tone',
+              'Boosts collagen production'
+            ],
+            cons: [
+              'Can cause irritation and peeling',
+              'Requires daily sun protection',
+              'Not suitable during pregnancy'
+            ],
+          },
+          {
+            name: 'Fragrance',
+            rating: 'concern',
+            pros: [
+              'Provides pleasant product scent'
+            ],
+            cons: [
+              'Common allergen and irritant',
+              'Can disrupt skin barrier',
+              'May cause contact dermatitis',
+              'Unnecessary for product efficacy'
+            ],
+          },
         ],
         timestamp: new Date(),
-        confidence: 95,
+        confidence: 92,
       };
-      setScanResult(mockResult);
-      setIsScanning(false);
-    }, 2000);
+      setAnalysisResult(mockResult);
+      setIsAnalyzing(false);
+    }, 2500);
   };
 
-  const handleNewScan = () => {
-    setScanResult(null);
+  const handleNewAnalysis = () => {
+    setAnalysisResult(null);
   };
 
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      {!scanResult ? (
-        <Hero onScan={handleScan} isScanning={isScanning} />
+      {!analysisResult ? (
+        <Hero onScan={handleAnalyze} isScanning={isAnalyzing} />
       ) : (
-        <ScanResults data={scanResult} onNewScan={handleNewScan} />
+        <AnalysisResults data={analysisResult} onNewAnalysis={handleNewAnalysis} />
       )}
     </div>
   );

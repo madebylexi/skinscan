@@ -25,7 +25,7 @@ export function UrlScanner({ onScan, isScanning = false }: UrlScannerProps) {
           <Globe className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
           <Input
             type="url"
-            placeholder="Enter product page URL (e.g., https://example.com/product)"
+            placeholder="Enter skincare product page URL (e.g., https://example.com/product)"
             value={url}
             onChange={(e) => setUrl(e.target.value)}
             className="pl-10 h-12"
@@ -44,10 +44,10 @@ export function UrlScanner({ onScan, isScanning = false }: UrlScannerProps) {
           {isScanning ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Scanning
+              Analyzing
             </>
           ) : (
-            "Scan Now"
+            "Analyze"
           )}
         </Button>
       </div>
