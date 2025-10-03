@@ -4,12 +4,12 @@
 SkincareIQ is a web application that analyzes skincare product ingredients using AI to provide detailed pros and cons for each ingredient. Users can enter a product URL and receive instant analysis of ingredients with ratings (beneficial, caution, or concern) along with comprehensive benefits and potential concerns.
 
 ## Recent Changes (October 3, 2025)
+- **Switched to Google Gemini AI** (gemini-2.5-flash) for ingredient analysis due to better quota availability
 - Implemented URL scraping functionality using Cheerio
-- Connected backend API with OpenAI GPT-5 for real-time ingredient analysis
 - Fixed input text color visibility issue for better UX
 - Removed mock data and connected frontend to actual API
 - Added comprehensive error handling and user feedback with toasts
-- Integrated OpenAI API key via Replit's secure secrets management
+- Integrated AI API key via Replit's secure secrets management
 
 ## Previous Changes (October 2, 2025)
 - Transformed from allergen detection to skincare ingredient analysis
@@ -48,8 +48,8 @@ The application features:
 - Currently using in-memory storage
 - API endpoint `/api/analyze` for URL scraping and ingredient analysis
 - Web scraping implementation using Axios and Cheerio
-- OpenAI GPT-5 integration for AI-powered ingredient analysis
-- Comprehensive error handling for scraping failures
+- Google Gemini AI (gemini-2.5-flash) integration for AI-powered ingredient analysis
+- Comprehensive error handling for scraping failures and API quota management
 
 ### Styling
 - Tailwind CSS with custom purple theme
@@ -61,7 +61,7 @@ The application features:
 - **Frontend**: React, TypeScript, Wouter, TanStack Query
 - **Backend**: Express, TypeScript, Axios, Cheerio
 - **Styling**: Tailwind CSS, Shadcn UI
-- **AI**: OpenAI GPT-5 (fully integrated)
+- **AI**: Google Gemini AI 2.5 (gemini-2.5-flash model)
 - **Web Scraping**: Cheerio for HTML parsing
 
 ## Next Steps
