@@ -3,10 +3,11 @@ import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import axios from "axios";
 import * as cheerio from "cheerio";
-import OpenAI from "openai";
+import { GoogleGenAI } from "@google/genai";
 
-// the newest OpenAI model is "gpt-5" which was released August 7, 2025. do not change this unless explicitly requested by the user
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+// DON'T DELETE THIS COMMENT
+// Note that the newest Gemini model series is "gemini-2.5-flash" or "gemini-2.5-pro"
+const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || "" });
 
 interface AnalyzedIngredient {
   name: string;
@@ -98,7 +99,9 @@ async function analyzeIngredientsWithAI(ingredients: string): Promise<{
   confidence: number;
 }> {
   try {
-    const prompt = `You are a skincare ingredient expert. Analyze the following skincare product ingredients and provide detailed information about each significant ingredient.
+    const systemPrompt = `You are a skincare ingredient analysis expert. Provide detailed, accurate analysis of skincare ingredients based on scientific research. Always respond with valid JSON.`;
+
+    const userPrompt = `You are a skincare ingredient expert. Analyze the following skincare product ingredients and provide detailed information about each significant ingredient.
 
 Ingredients: ${ingredients}
 
@@ -128,28 +131,53 @@ Respond with valid JSON in this exact format:
   "confidence": 85
 }`;
 
-    const response = await openai.chat.completions.create({
-      model: "gpt-5",
-      messages: [
-        {
-          role: "system",
-          content: "You are a skincare ingredient analysis expert. Provide detailed, accurate analysis of skincare ingredients based on scientific research. Always respond with valid JSON."
-        },
-        {
-          role: "user",
-          content: prompt
+    const response = await ai.models.generateContent({
+      model: "gemini-2.5-flash",
+      config: {
+        systemInstruction: systemPrompt,
+        responseMimeType: "application/json",
+        responseSchema: {
+          type: "object",
+          properties: {
+            analyzedIngredients: {
+              type: "array",
+              items: {
+                type: "object",
+                properties: {
+                  name: { type: "string" },
+                  commonName: { type: "string" },
+                  rating: { type: "string" },
+                  pros: {
+                    type: "array",
+                    items: { type: "string" }
+                  },
+                  cons: {
+                    type: "array",
+                    items: { type: "string" }
+                  }
+                },
+                required: ["name", "rating", "pros", "cons"]
+              }
+            },
+            confidence: { type: "number" }
+          },
+          required: ["analyzedIngredients", "confidence"]
         }
-      ],
-      response_format: { type: "json_object" },
-      max_completion_tokens: 8192
+      },
+      contents: userPrompt,
     });
 
-    const result = JSON.parse(response.choices[0].message.content || '{}');
-    
-    return {
-      analyzedIngredients: result.analyzedIngredients || [],
-      confidence: result.confidence || 75
-    };
+    const rawJson = response.text;
+
+    if (rawJson) {
+      const result = JSON.parse(rawJson);
+      return {
+        analyzedIngredients: result.analyzedIngredients || [],
+        confidence: result.confidence || 75
+      };
+    } else {
+      throw new Error("Empty response from model");
+    }
   } catch (error) {
     throw new Error(`AI analysis failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
   }
