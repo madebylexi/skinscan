@@ -22,7 +22,6 @@ export function Hero({ onScan, isScanning }: HeroProps) {
           
           <p className="text-lg sm:text-xl text-primary-foreground/90 mb-8 max-w-2xl mx-auto">
             Instantly analyze product ingredients to discover benefits, concerns, and make informed skincare decisions. 
-            Get expert AI-driven insights.
           </p>
 
           <div className="max-w-3xl mx-auto mb-8">
