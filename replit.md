@@ -3,7 +3,15 @@
 ## Overview
 SkincareIQ is a web application that analyzes skincare product ingredients using AI to provide detailed pros and cons for each ingredient. Users can enter a product URL and receive instant analysis of ingredients with ratings (beneficial, caution, or concern) along with comprehensive benefits and potential concerns.
 
-## Recent Changes (October 2, 2025)
+## Recent Changes (October 3, 2025)
+- **Switched to Google Gemini AI** (gemini-2.5-flash) for ingredient analysis due to better quota availability
+- Implemented URL scraping functionality using Cheerio
+- Fixed input text color visibility issue for better UX
+- Removed mock data and connected frontend to actual API
+- Added comprehensive error handling and user feedback with toasts
+- Integrated AI API key via Replit's secure secrets management
+
+## Previous Changes (October 2, 2025)
 - Transformed from allergen detection to skincare ingredient analysis
 - Updated color scheme to purple/beauty theme
 - Created ingredient analysis cards with pros/cons display
@@ -14,12 +22,14 @@ SkincareIQ is a web application that analyzes skincare product ingredients using
 The application features:
 - Beautiful purple-themed UI optimized for beauty/wellness
 - URL scanner for product pages
-- AI-powered ingredient analysis (mock data currently)
+- AI-powered ingredient analysis using OpenAI GPT-5
+- Real-time web scraping from product URLs (e.g., isclinical.com)
 - Detailed ingredient cards showing benefits and concerns
 - Overall product rating system
 - Ingredient list highlighting
 - Dark/light mode support
 - Fully responsive design
+- Toast notifications for analysis results and errors
 
 ## Project Architecture
 
@@ -36,8 +46,10 @@ The application features:
 
 ### Backend (Express + TypeScript)
 - Currently using in-memory storage
-- API routes ready for integration in `server/routes.ts`
-- OpenAI integration prepared (API key configured)
+- API endpoint `/api/analyze` for URL scraping and ingredient analysis
+- Web scraping implementation using Axios and Cheerio
+- Google Gemini AI (gemini-2.5-flash) integration for AI-powered ingredient analysis
+- Comprehensive error handling for scraping failures and API quota management
 
 ### Styling
 - Tailwind CSS with custom purple theme
@@ -47,16 +59,17 @@ The application features:
 
 ## Tech Stack
 - **Frontend**: React, TypeScript, Wouter, TanStack Query
-- **Backend**: Express, TypeScript
+- **Backend**: Express, TypeScript, Axios, Cheerio
 - **Styling**: Tailwind CSS, Shadcn UI
-- **AI**: OpenAI GPT-4 (ready for integration)
+- **AI**: Google Gemini AI 2.5 (gemini-2.5-flash model)
+- **Web Scraping**: Cheerio for HTML parsing
 
 ## Next Steps
-1. Implement actual OpenAI integration for ingredient analysis
-2. Add web scraping for product ingredient extraction
-3. Create database schema for analysis history
-4. Add user accounts for saved analyses
-5. Implement batch analysis for multiple products
+1. Create database schema for analysis history
+2. Add user accounts for saved analyses
+3. Implement batch analysis for multiple products
+4. Add support for more product websites
+5. Enhance ingredient database with more detailed information
 
 ## User Preferences
 - Focus on clean, professional design
